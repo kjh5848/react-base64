@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 export default function ListPage() {
   const [images, setImages] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -13,15 +12,13 @@ export default function ListPage() {
         setImages(res.data);
       } catch (err) {
         console.error("이미지 목록을 불러오지 못했습니다:", err);
-      } finally {
-        setLoading(false);
       }
     };
     fetchImages();
   }, []);
 
-  if (loading) return <p style={{ padding: 20 }}>로딩 중...</p>;
-  if (images.length === 0) return <p style={{ padding: 20 }}>업로드된 이미지가 없습니다.</p>;
+  if (images.length === 0)
+    return <p style={{ padding: 20 }}>업로드된 이미지가 없습니다.</p>;
 
   return (
     <div style={{ padding: 20 }}>
@@ -33,9 +30,9 @@ export default function ListPage() {
               src={`http://localhost:8080${img.url}`}
               alt={img.fileName}
               style={{
-                width: 150,
-                height: 150,
-                objectFit: "cover",
+                width: 350,
+                height: 350,
+                objectFit: "fill",
                 borderRadius: 8,
                 border: "1px solid #ccc",
               }}

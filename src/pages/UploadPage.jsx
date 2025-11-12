@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { imageApi } from "../api/imageApi";
 
 export default function UploadPage() {
+  const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e) => {
     const f = e.target.files[0];
@@ -19,15 +20,13 @@ export default function UploadPage() {
     reader.onloadend = async () => {
       // data:image/png;base64,~~~~ 중 실제 Base64 부분만 추출
       const base64 = reader.result.split(",")[1];
-      setLoading(true);
       try {
         await imageApi.upload(file.name, base64);
         alert("업로드 완료!");
+        navigate("/");
       } catch (err) {
         console.error(err);
         alert("업로드 실패!");
-      } finally {
-        setLoading(false);
       }
     };
     reader.readAsDataURL(file);
@@ -41,12 +40,8 @@ export default function UploadPage() {
         <img style={{ width: 500, height: 500 }} src={preview} alt="preview" />
       )}
       <br />
-      <button
-        style={{ marginTop: 10, width: 200 }}
-        onClick={handleUpload}
-        disabled={loading}
-      >
-        {loading ? "업로드 중..." : "업로드"}
+      <button style={{ marginTop: 10, width: 200 }} onClick={handleUpload}>
+        업로드
       </button>
     </div>
   );
